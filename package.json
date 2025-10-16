@@ -34,6 +34,7 @@
   },
   "author": "Webstir",
   "devDependencies": {
+    "@types/node": "^20.19.21",
     "typescript": "^5.7.2"
   }
 }
