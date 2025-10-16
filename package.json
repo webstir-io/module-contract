@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "test": "npm run build",
     "clean": "rm -rf dist schema"
   },
   "keywords": [
@@ -29,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/electric/webstir"
+    "url": "https://github.com/webstir-io/module-contract"
   },
   "author": "Webstir",
   "devDependencies": {
