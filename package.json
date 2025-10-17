@@ -1,6 +1,6 @@
 {
   "name": "@webstir-io/module-contract",
-  "version": "0.1.0",
+  "version": "0.1.0"
   "description": "Public contract definitions for Webstir frontend and backend module providers.",
   "type": "module",
   "main": "dist/index.js",
@@ -20,7 +20,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build",
-    "clean": "rm -rf dist schema"
+    "clean": "rm -rf dist schema",
+    "prepare": "npm run build"
   },
   "keywords": [
     "webstir",
