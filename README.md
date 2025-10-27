@@ -167,6 +167,8 @@ When authoring a provider:
 npm install
 npm run build          # cleans, compiles TypeScript, regenerates schema/*.schema.json
 npm run test           # type-checks the Accounts example module
+# Release helper (bumps version/test/publish to GitHub Packages)
+npm run release -- patch
 ```
 
 - The `schema/` folder contains `*-definition.schema.json` files derived from the exported Zod schemas. Commit them with contract changes.

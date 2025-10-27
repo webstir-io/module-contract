@@ -29,6 +29,7 @@
     "build:schema": "node scripts/build-schema.mjs",
     "test": "npm run build && npm run test:examples",
     "test:examples": "tsc -p tsconfig.examples.json",
+    "release": "bash scripts/publish.sh",
     "prepare": "npm run build"
   },
   "keywords": [
