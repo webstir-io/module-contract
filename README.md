@@ -167,7 +167,7 @@ When authoring a provider:
 npm install
 npm run build          # cleans, compiles TypeScript, regenerates schema/*.schema.json
 npm run test           # type-checks the Accounts example module
-# Release helper (bumps version/test/publish to GitHub Packages)
+# Release helper (bumps version/test/publish to GitHub Packages, prompts to push)
 npm run release -- patch
 ```
 

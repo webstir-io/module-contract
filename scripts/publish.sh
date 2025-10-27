@@ -20,13 +20,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 main() {
-  if [[ $# -ne 1 ]]; then
+  if [[ $# -lt 1 ]]; then
     echo "error: version bump argument missing" >&2
     usage
   fi
 
   local bump="$1"
-
   if [[ ! $bump =~ ^(patch|minor|major)$ && ! $bump =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "error: invalid bump '$bump'" >&2
     usage
@@ -50,8 +49,16 @@ main() {
   npm publish --registry="https://npm.pkg.github.com"
 
   echo
-  echo "Release complete. Push the new commit and tag:"
-  echo "  git push && git push --tags"
+  read -r -p "Push git commit and tag upstream? [y/N]: " reply
+  if [[ "$reply" =~ ^[Yy](es)?$ ]]; then
+    echo "› git push"
+    git push
+    echo "› git push --tags"
+    git push --tags
+  else
+    echo "Skipping push. To publish upstream later, run:"
+    echo "  git push && git push --tags"
+  fi
 }
 
 ensure_clean_git() {
