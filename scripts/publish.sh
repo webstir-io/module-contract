@@ -32,7 +32,6 @@ main() {
   fi
 
   ensure_clean_git
-  ensure_npm_login
 
   cd "$ROOT_DIR"
 
@@ -45,11 +44,26 @@ main() {
   echo "› npm run test"
   npm run test
 
-  echo "› npm publish --registry=https://npm.pkg.github.com"
-  npm publish --registry="https://npm.pkg.github.com"
+  # Do not publish from this script. Release workflow owns publish.
+  echo "› Skipping direct npm publish; pushing commit+tag will trigger the release workflow."
 
   echo
-  read -r -p "Push git commit and tag upstream? [y/N]: " reply
+  # If running in CI or without a TTY, skip the interactive prompt unless auto-push requested.
+  if [[ -n "${CI:-}" || ! -t 0 ]]; then
+    if [[ "${PUBLISH_AUTO_PUSH:-}" =~ ^([Yy][Ee][Ss]|[Yy]|1|true)$ ]]; then
+      echo "› git push"
+      git push
+      echo "› git push --tags"
+      git push --tags
+    else
+      echo "No TTY detected; skipping git push prompt."
+      echo "Set PUBLISH_AUTO_PUSH=1 to push commit and tags automatically."
+    fi;
+    return 0
+  fi
+
+  # Interactive shell: ask the user.
+  read -r -p "Push git commit and tag upstream? [y/N]: " reply || true
   if [[ "$reply" =~ ^[Yy](es)?$ ]]; then
     echo "› git push"
     git push
@@ -69,16 +83,6 @@ ensure_clean_git() {
   fi
   if ! git diff --quiet --cached --ignore-submodules; then
     echo "error: git index has staged changes" >&2
-    exit 1
-  fi
-}
-
-ensure_npm_login() {
-  if ! npm whoami --registry="https://npm.pkg.github.com" >/dev/null 2>&1; then
-    cat >&2 <<'EOF'
-error: not authenticated with https://npm.pkg.github.com.
-Run: npm login --registry=https://npm.pkg.github.com --scope=@webstir-io
-EOF
     exit 1
   fi
 }
