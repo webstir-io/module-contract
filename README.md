@@ -28,6 +28,7 @@ import {
   defineRoute,
   defineView,
   createModule,
+  CONTRACT_VERSION,
   type RequestContext,
   type SSRContext,
 } from '@webstir-io/module-contract';
@@ -89,7 +90,7 @@ const accountView = defineView<SSRContext, typeof paramsSchema, typeof viewDataS
 
 export const accountsModule = createModule({
   manifest: {
-    contractVersion: '1.0.0',
+    contractVersion: CONTRACT_VERSION,
     name: '@demo/accounts',
     version: '0.0.1',
     kind: 'backend',
