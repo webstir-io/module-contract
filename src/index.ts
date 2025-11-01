@@ -385,6 +385,9 @@ export const moduleManifestSchema = z.object({
   version: z.string().min(1),
   kind: moduleKindSchema,
   capabilities: z.array(z.string()).optional(),
+  // New: optional pass-through lists
+  assets: z.array(z.string()).optional(),
+  middlewares: z.array(z.string()).optional(),
   routes: z.array(routeDefinitionSchema).optional(),
   views: z.array(viewDefinitionSchema).optional(),
   jobs: z.array(jobDefinitionSchema).optional(),

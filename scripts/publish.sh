@@ -4,7 +4,7 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: scripts/publish.sh <patch|minor|major|x.y.z>
+Usage: scripts/publish.sh <patch|minor|major|x.y.z> [--contract-version x.y.z]
 
 Examples:
   scripts/publish.sh patch
@@ -25,7 +25,22 @@ main() {
     usage
   fi
 
-  local bump="$1"
+  local bump="$1"; shift || true
+  local contract_version=""
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --contract-version)
+        shift
+        contract_version="${1:-}"
+        ;;
+      *)
+        echo "error: unknown option '$1'" >&2
+        usage
+        ;;
+    esac
+    shift || true
+  done
   if [[ ! $bump =~ ^(patch|minor|major)$ && ! $bump =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "error: invalid bump '$bump'" >&2
     usage
@@ -37,6 +52,11 @@ main() {
 
   echo "› npm version $bump"
   npm version "$bump"
+
+  if [[ -n "$contract_version" ]]; then
+    echo "› Updating CONTRACT_VERSION to $contract_version"
+    update_contract_version "$contract_version"
+  fi
 
   echo "› npm run build"
   npm run build
@@ -85,6 +105,22 @@ ensure_clean_git() {
     echo "error: git index has staged changes" >&2
     exit 1
   fi
+}
+
+update_contract_version() {
+  local new_ver="$1"
+  if [[ ! $new_ver =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "error: invalid contract version '$new_ver'" >&2
+    exit 1
+  fi
+  local file="${ROOT_DIR}/src/index.ts"
+  if [[ ! -f "$file" ]]; then
+    echo "error: cannot find $file to update CONTRACT_VERSION" >&2
+    exit 1
+  fi
+  # Replace the export line
+  sed -i'' -E "s|^export const CONTRACT_VERSION = '[0-9]+\.[0-9]+\.[0-9]+' as const;|export const CONTRACT_VERSION = '${new_ver}' as const;|" "$file"
+  echo "› CONTRACT_VERSION updated in src/index.ts"
 }
 
 main "$@"

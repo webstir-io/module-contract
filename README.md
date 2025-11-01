@@ -95,6 +95,9 @@ export const accountsModule = createModule({
     version: '0.0.1',
     kind: 'backend',
     capabilities: ['auth', 'db', 'views'],
+    // Optional: pass-through metadata for providers
+    assets: [],
+    middlewares: [],
     routes: [getAccount.definition],
     views: [accountView.definition]
   },
