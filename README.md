@@ -45,6 +45,21 @@ import { fromTsRestRoute, fromTsRestRouter } from '@webstir-io/module-contract/t
 
 > Install `@ts-rest/core` to use the adapters; it's published as an optional peer dependency of this package.
 
+## Schema References
+
+`SchemaReference` objects describe how a manifest entry maps back to the typed schema that produced it. Webstir modules emit these references in `route.input`, `route.output`, and `view` definitions so downstream tooling can point developers to the right file when something fails validation.
+
+Format:
+- `kind` &mdash; schema system. Supported values: `zod` (default), `json-schema`, `ts-rest`.
+- `name` &mdash; PascalCase identifier that matches the exported symbol or schema `$id`.
+- `source` &mdash; optional module specifier (usually a workspace-relative path like `src/backend/routes/accounts.ts` or a package entry such as `@demo/contracts/accounts.ts`).
+
+Naming & source guidance:
+- Keep `name` stable across builds. Use the TypeScript identifier for `zod`, the `$id` (or filename) for JSON Schema, and the router key for ts-rest adapters.
+- Use `source` whenever the schema lives outside the generated manifest (for example, in `src/shared/contracts/`), and prefer workspace-relative paths so the CLI can resolve them after scaffolding.
+- When emitting references from the CLI, serialize the tuple as `kind:name@source` (drop `kind:` for `zod` and omit `@source` when not needed). This is the same string accepted by `--*-schema` flags on `webstir add-route`.
+- Keep `kind`/`name` unique per file to avoid ambiguity when generators pre-populate manifest entries.
+
 ## Usage Example
 
 ```ts
@@ -63,8 +78,13 @@ const getAccount = defineRoute<RequestContext, typeof paramsSchema, undefined, u
     name: 'getAccount',
     method: 'GET',
     path: '/accounts/:id',
-    input: { params: { kind: 'zod', name: 'AccountRouteParams' } },
-    output: { body: { kind: 'zod', name: 'AccountRouteResponse' }, status: 200 }
+    input: {
+      params: { kind: 'zod', name: 'AccountRouteParams', source: 'src/backend/server/routes/accounts.ts' }
+    },
+    output: {
+      body: { kind: 'zod', name: 'AccountRouteResponse', source: 'src/backend/server/routes/accounts.ts' },
+      status: 200
+    }
   },
   schemas: {
     params: paramsSchema,
@@ -80,8 +100,8 @@ const accountView = defineView<SSRContext, typeof paramsSchema, typeof viewDataS
   definition: {
     name: 'AccountView',
     path: '/accounts/:id',
-    params: { kind: 'zod', name: 'AccountViewParams' },
-    data: { kind: 'zod', name: 'AccountViewData' }
+    params: { kind: 'zod', name: 'AccountViewParams', source: 'src/backend/views/account.ts' },
+    data: { kind: 'zod', name: 'AccountViewData', source: 'src/backend/views/account.ts' }
   },
   params: paramsSchema,
   data: viewDataSchema,
