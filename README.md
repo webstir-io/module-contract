@@ -2,6 +2,11 @@
 
 TypeScript interfaces, helper utilities, and JSON schema describing Webstir modules and providers. The contract covers build-time provider APIs and the runtime surface (contexts, manifests, routes, views) that providers expose to the orchestrator.
 
+## Status
+
+- Experimental contract for the Webstir ecosystem — shapes and helpers may change as providers and orchestrator behavior are refined.
+- Expect breaking changes across early versions; pin carefully if you integrate it outside Webstir itself.
+
 ## Install
 
 ```ini
@@ -184,6 +189,13 @@ When authoring a provider:
 2. Use `createModule`/`defineRoute`/`defineView` to declare runtime capabilities with Zod-powered validation.
 3. Return absolute filesystem paths in `ModuleArtifact.path` from the build step.
 4. Emit `ModuleDiagnostic`s for recoverable issues and include the module manifest in `ModuleBuildResult.manifest.module`.
+
+## Community & Support
+
+- Code of Conduct: https://github.com/webstir-io/.github/blob/main/CODE_OF_CONDUCT.md
+- Contributing guidelines: https://github.com/webstir-io/.github/blob/main/CONTRIBUTING.md
+- Security policy and disclosure process: https://github.com/webstir-io/.github/blob/main/SECURITY.md
+- Support expectations and contact channels: https://github.com/webstir-io/.github/blob/main/SUPPORT.md
 
 ## Maintainer Workflow
 
