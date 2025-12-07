@@ -327,7 +327,14 @@ export const viewDefinitionSchema = z.object({
   description: z.string().optional(),
   tags: z.array(z.string()).optional(),
   params: schemaReferenceSchema.optional(),
-  data: schemaReferenceSchema.optional()
+  data: schemaReferenceSchema.optional(),
+  renderMode: z.enum(['ssg', 'ssr', 'spa']).optional(),
+  staticPaths: z.array(z.string().min(1)).optional(),
+  ssg: z
+    .object({
+      revalidateSeconds: z.number().int().positive().optional()
+    })
+    .optional()
 });
 
 export type ViewDefinition = z.infer<typeof viewDefinitionSchema>;

@@ -47,6 +47,7 @@ import { fromTsRestRoute, fromTsRestRouter } from '@webstir-io/module-contract/t
 - `defineRoute`, `defineView`, and `createModule` give providers ergonomic helpers with strong TypeScript inference.
 - `RequestContext` and `SSRContext` describe what the orchestrator supplies to route and view handlers.
 - `fromTsRestRoute` converts an `@ts-rest/core` route contract into a Webstir `RouteSpec`, and `fromTsRestRouter` adapts an entire ts-rest router tree at once.
+- Views support optional SSG metadata: `renderMode?: 'ssg' | 'ssr' | 'spa'`, `staticPaths?: string[]`, and a reserved `ssg?: { revalidateSeconds?: number }` bag for future incremental/static revalidation hints.
 
 > Install `@ts-rest/core` to use the adapters; it's published as an optional peer dependency of this package.
 
@@ -106,7 +107,10 @@ const accountView = defineView<SSRContext, typeof paramsSchema, typeof viewDataS
     name: 'AccountView',
     path: '/accounts/:id',
     params: { kind: 'zod', name: 'AccountViewParams', source: 'src/backend/views/account.ts' },
-    data: { kind: 'zod', name: 'AccountViewData', source: 'src/backend/views/account.ts' }
+    data: { kind: 'zod', name: 'AccountViewData', source: 'src/backend/views/account.ts' },
+    // Optional SSG hints for frontend providers
+    renderMode: 'ssg',
+    staticPaths: ['/accounts/demo']
   },
   params: paramsSchema,
   data: viewDataSchema,
