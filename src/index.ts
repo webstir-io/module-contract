@@ -252,7 +252,14 @@ export const routeDefinitionSchema = z.object({
   tags: z.array(z.string()).optional(),
   input: routeInputSchema.optional(),
   output: routeOutputSchema.optional(),
-  errors: z.array(moduleErrorSchema).optional()
+  errors: z.array(moduleErrorSchema).optional(),
+  renderMode: z.enum(['ssg', 'ssr', 'spa']).optional(),
+  staticPaths: z.array(z.string().min(1)).optional(),
+  ssg: z
+    .object({
+      revalidateSeconds: z.number().int().positive().optional()
+    })
+    .optional()
 });
 
 export type RouteDefinition = z.infer<typeof routeDefinitionSchema>;
