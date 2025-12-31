@@ -24,11 +24,12 @@
   ],
   "scripts": {
     "clean": "rm -rf dist schema",
-    "build": "npm run clean && npm run build:types && npm run build:schema",
+    "build": "npm run build:types && npm run build:schema",
     "build:types": "tsc -p tsconfig.json",
     "build:schema": "node scripts/build-schema.mjs",
-    "test": "npm run build && npm run test:examples",
+    "test": "npm run test:examples",
     "test:examples": "tsc -p tsconfig.examples.json",
+    "smoke": "node -e \"console.log('[smoke] no smoke tests configured');\"",
     "release": "bash scripts/publish.sh",
     "prepare": "npm run build"
   },

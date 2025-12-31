@@ -205,14 +205,15 @@ When authoring a provider:
 
 ```bash
 npm install
-npm run build          # cleans, compiles TypeScript, regenerates schema/*.schema.json
+npm run clean          # remove dist/schema artifacts
+npm run build          # compiles TypeScript, regenerates schema/*.schema.json
 npm run test           # type-checks the Accounts example module
-# Release helper (bumps version/test/publish to GitHub Packages, prompts to push)
+# Release helper (bumps version, pushes tags to trigger release workflow)
 npm run release -- patch
 ```
 
 - The `schema/` folder contains `*-definition.schema.json` files derived from the exported Zod schemas. Commit them with contract changes.
-- Ensure CI runs `npm run build` and fails on schema drift before publish.
+- Ensure CI runs `npm ci`, `npm run clean`, `npm run build`, `npm run test`, and `npm run smoke` before publish.
 
 ## License
 
