@@ -53,7 +53,7 @@ main() {
   cd "$ROOT_DIR"
 
   echo "› npm version $bump"
-  npm version "$bump" -m "chore: release v%s"
+  npm version "$bump" -m "v%s"
 
   echo "› npm install --package-lock-only"
   npm install --package-lock-only
