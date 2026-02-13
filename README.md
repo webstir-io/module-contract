@@ -9,17 +9,9 @@ TypeScript interfaces, helper utilities, and JSON schema describing Webstir modu
 
 ## Install
 
-```ini
-# .npmrc
-@webstir-io:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GH_PACKAGES_TOKEN}
-```
-
 ```bash
 npm install @webstir-io/module-contract
 ```
-
-Consumers only need `read:packages`; publishers also require `write:packages`.
 
 ## Provided Types
 
